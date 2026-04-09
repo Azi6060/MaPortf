@@ -186,7 +186,7 @@ app.post('/api/rag/chat', async (req, res) => {
 
     const intent = classifyIntent(lastUser, messages);
 
-    if (intent === 'greeting')        return res.json({ answer: RESPONSES.greeting,        sources: [] });
+    if (intent === 'greeting')         return res.json({ answer: RESPONSES.greeting,         sources: [] });
     if (intent === 'minime_identity') return res.json({ answer: RESPONSES.minime_identity, sources: [] });
     if (intent === 'minime_features') return res.json({ answer: RESPONSES.minime_features, sources: [] });
     if (intent === 'impersonation')   return res.json({ answer: RESPONSES.impersonation,   sources: [] });
@@ -236,8 +236,10 @@ app.post('/api/rag/chat', async (req, res) => {
   }
 });
 
-// ─── Catch-all: serve index.html for SPA routes ──────────────────────────────
-app.get('*', (_req, res) => {
+// ─── Catch-all: Fixed for Express 5 ──────────────────────────────────────────
+// The '*' wildcard is no longer supported directly in Express 5.
+// Using '(.*)' satisfies the new requirement for named/captured parameters.
+app.get('(.*)', (_req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
