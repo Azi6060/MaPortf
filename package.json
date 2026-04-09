@@ -1,0 +1,39 @@
+{
+  "name": "portfolio-landing",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:server": "tsx server/index.ts",
+    "dev:all": "tsx server/index.ts",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "start": "tsx server/index.ts"
+  },
+  "dependencies": {
+    "@xenova/transformers": "^2.17.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.1",
+    "express": "^5.2.1",
+    "groq-sdk": "^1.1.2",
+    "lucide-react": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.19.17",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@vitejs/plugin-react-swc": "latest",
+    "autoprefixer": "latest",
+    "postcss": "latest",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.21.0",
+    "typescript": "latest",
+    "vite": "latest"
+  }
+}

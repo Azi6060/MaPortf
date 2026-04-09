@@ -1,0 +1,94 @@
+# FAQ — MiniMe Portfolio Assistant
+
+Frequently asked questions from portfolio visitors. Answers are grounded strictly in Aziz's resume, bio, and project documentation.
+
+---
+
+## About MiniMe (the assistant)
+
+### Who are you / What are you?
+MiniMe is an AI assistant built into Aziz's portfolio — not Aziz himself. It has deep knowledge of his background, skills, projects, and work style, and exists to help visitors — recruiters, developers, collaborators — learn about him efficiently.
+
+### What can you do / What are your features?
+MiniMe can answer questions about: Aziz's educational background and GPA, his technical skills and stack, his projects in detail (InsightFlow, Swarm Rescue v2, AI Text Detection), his certifications, his availability for internships, his work ethic and personality, and how to contact him.
+
+### What technology powers MiniMe?
+RAG (Retrieval-Augmented Generation) with semantic search over Aziz's documents, powered by a Groq-hosted LLM. Documents are embedded locally using a transformer model and retrieved via cosine similarity before being passed to the language model.
+
+---
+
+## About Aziz
+
+### Who is Aziz?
+Azizkhudzha Azizov is an AI Systems Developer and Computer Science student at Asia Pacific University (APU) in Kuala Lumpur, Malaysia, specialising in Artificial Intelligence. He builds practical systems at the intersection of multi-agent AI, LLM orchestration, and full-stack engineering.
+
+### Where is he based?
+Kuala Lumpur, Malaysia — studying at Asia Pacific University (APU).
+
+### What is he studying?
+Bachelor of Science in Computer Science with an AI specialisation at APU. Started September 2023, expected graduation October 2027. Current GPA: 3.42.
+
+### Is he open to opportunities?
+Yes — actively looking for an AI-related internship in Kuala Lumpur. Internship period: 1st July – 31st October (16 weeks). Open to roles in AI systems, machine learning, LLM integration, or full-stack AI development.
+
+### How can I contact Aziz?
+- Email: azizkhuja2005@gmail.com
+- Phone: +60179169293
+- GitHub: https://github.com/Azi6060
+- LinkedIn: https://www.linkedin.com/in/azizkhudzha-azizov
+
+---
+
+## Skills & Technical Background
+
+### What programming languages does Aziz know?
+Python, Java, C#, JavaScript, and SQL.
+
+### What are his main technical skills?
+- **AI & ML:** Multi-agent systems, LLM integration, RAG architectures, supervised learning, classification, regression, NLP pipelines
+- **Frameworks:** CrewAI, FastAPI, React, scikit-learn, PyTorch, HuggingFace Transformers, Pandas, NumPy
+- **Systems:** REST APIs, distributed systems, Linux administration (Red Hat), MCP (Model Context Protocol)
+- **Cloud:** AWS (Cloud Practitioner, ML Foundations, Generative AI, NLP)
+
+### What certifications does he hold?
+- AWS Cloud Quest – Cloud Practitioner
+- AWS Academy Graduate – Machine Learning Foundations
+- AWS Academy Graduate – Generative AI Foundations
+- AWS Academy Graduate – Machine Learning for Natural Language Processing
+- Red Hat System Administration I (RH124 – RHA) v9.3
+- Meta Introduction to Front-End Development
+
+### What is his specialisation?
+Multi-agent AI systems, LLM orchestration, and production-grade AI infrastructure. He focuses on building systems where AI agents coordinate autonomously — not just calling APIs, but architecting the full pipelines, backends, and data layers around them.
+
+---
+
+## Projects
+
+### What projects has Aziz built?
+Three major AI projects:
+1. **InsightFlow** — A Bloomberg-style enterprise intelligence platform with multi-agent AI analysis and ML revenue prediction
+2. **Swarm Rescue v2** — A decentralised drone swarm system for search-and-rescue with peer-to-peer coordination
+3. **AI-Generated Text Detection System** — A web app using RoBERTa transformer models to detect AI-generated text
+
+### What is InsightFlow?
+InsightFlow is a Bloomberg-style business intelligence platform. Frontend: React 18 + Vite. Backend: FastAPI + Python. It has four specialised AI agents powered by CrewAI and a local Mistral LLM via Ollama. The agents analyse 12 linked JSON datasets and synthesise cross-domain findings — financial, operational, client/partner — into one coherent answer. Includes a Gradient Boosting ML model for 8 revenue prediction scenarios. Runs fully locally with no external AI API dependencies.
+
+### What is Swarm Rescue v2?
+A decentralised drone swarm system for search-and-rescue. Five drones operate autonomously with no central controller, coordinating peer-to-peer via a pub/sub SwarmBus. When a drone fails, the others detect it and redistribute sectors automatically. A Commander AI (Gemini) accepts natural language commands and translates them into MCP tool calls. Built for V Hack 2026 by Team WeHack, aligned with SDG 9 and SDG 3.
+
+### What is the AI Text Detection project?
+A web app that uses an ensemble of RoBERTa transformer models to classify whether text was written by a human or generated by AI. Built with Python, Flask, PyTorch, and HuggingFace Transformers.
+
+---
+
+## Work Style & Personal
+
+### How would you describe Aziz's work ethic?
+Disciplined, consistent, and efficiency-focused. He structures his days deliberately — early wake-ups, deep focused work blocks, no strict concept of weekends. He prefers action and execution over overthinking, and prioritises high-value activities.
+
+### What drives him?
+He chose AI because he sees it as one of the most important inventions of modern humanity — capable of massively increasing efficiency, transforming ideas into executable solutions, and solving real-world problems at scale. Long-term he is focused on financial success, building valuable global connections, and developing influence through skills and results.
+
+### What is his philosophy?
+Efficiency is a competitive advantage. Discipline creates consistency. Consistency leads to inevitable progress. He aims to build a life where growth is not optional — it is built into the system.
