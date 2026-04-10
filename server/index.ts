@@ -1,5 +1,14 @@
 import 'dotenv/config';
 
+process.on('uncaughtException', (err) => {
+  console.error('[fatal] uncaughtException:', err);
+  process.exit(1);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('[fatal] unhandledRejection:', reason);
+  process.exit(1);
+});
+
 import cors from 'cors';
 import express from 'express';
 import Groq from 'groq-sdk';
@@ -16,6 +25,9 @@ const __dirname = path.dirname(__filename);
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 
 const env = loadEnv();
+if (!env.GROQ_API_KEY) {
+  console.warn('[warn] GROQ_API_KEY is not set — chat endpoint will not work. Set it in Render environment variables.');
+}
 
 const app = express();
 app.use(express.json({ limit: '1mb' }));
@@ -241,7 +253,7 @@ app.post('/api/rag/chat', async (req, res) => {
 // ─── Catch-all: Fixed for Express 5 ──────────────────────────────────────────
 // The '*' wildcard is no longer supported directly in Express 5.
 // Using '(.*)' satisfies the new requirement for named/captured parameters.
-app.get('(.*)', (_req, res) => {
+app.get('*path', (_req, res) => {
   res.sendFile(path.join(PROJECT_ROOT, 'dist/index.html'));
 });
 
