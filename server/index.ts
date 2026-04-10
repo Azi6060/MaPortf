@@ -1,14 +1,5 @@
 import 'dotenv/config';
 
-process.on('uncaughtException', (err) => {
-  console.error('[fatal] uncaughtException:', err);
-  process.exit(1);
-});
-process.on('unhandledRejection', (reason) => {
-  console.error('[fatal] unhandledRejection:', reason);
-  process.exit(1);
-});
-
 import cors from 'cors';
 import express from 'express';
 import Groq from 'groq-sdk';
@@ -21,20 +12,15 @@ import { buildEmbeddingRetriever } from './rag/retriever.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-// Resolve project root regardless of where tsx runs from
-const PROJECT_ROOT = path.resolve(__dirname, '..');
 
 const env = loadEnv();
-if (!env.GROQ_API_KEY) {
-  console.warn('[warn] GROQ_API_KEY is not set — chat endpoint will not work. Set it in Render environment variables.');
-}
 
 const app = express();
 app.use(express.json({ limit: '1mb' }));
 app.use(cors({ origin: true }));
 
 // ─── Serve Vite build (fixes "Cannot GET /") ─────────────────────────────────
-app.use(express.static(path.join(PROJECT_ROOT, 'dist')));
+app.use(express.static(path.join(__dirname, '../dist')));
 
 type ChatMessage = { role: 'user' | 'assistant'; content: string };
 
@@ -253,8 +239,8 @@ app.post('/api/rag/chat', async (req, res) => {
 // ─── Catch-all: Fixed for Express 5 ──────────────────────────────────────────
 // The '*' wildcard is no longer supported directly in Express 5.
 // Using '(.*)' satisfies the new requirement for named/captured parameters.
-app.get('*path', (_req, res) => {
-  res.sendFile(path.join(PROJECT_ROOT, 'dist/index.html'));
+app.get('(.*)', (_req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
 // ─── Start server FIRST, then load RAG in background ─────────────────────────
@@ -262,7 +248,7 @@ app.listen(env.PORT, () => {
   console.log(`[server] listening on http://localhost:${env.PORT}`);
 
   // Load RAG after port is open so Render doesn't time out
-  loadRagChunks({ dataDir: path.resolve(PROJECT_ROOT, env.RAG_DATA_DIR) })
+  loadRagChunks({ dataDir: env.RAG_DATA_DIR })
     .then((chunks) => buildEmbeddingRetriever(chunks))
     .then((r) => {
       retriever = r;

@@ -60,7 +60,6 @@ body {
   color: var(--foreground);
   font-family: Inter, "Geist Sans", system-ui, sans-serif;
   overflow-x: hidden;
-  cursor: default;
 }
 ::selection { background: rgba(94,106,210,0.28); color: #fff; }
 ::-webkit-scrollbar { width: 3px; }
@@ -104,33 +103,6 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-}
-
-/* ═══════════════════════════════════════
-   CUSTOM CURSOR
-═══════════════════════════════════════ */
-.cursor-dot {
-  position: fixed;
-  width: 8px; height: 8px;
-  background: var(--accent);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 12px rgba(94,106,210,0.55), 0 0 24px rgba(94,106,210,0.25);
-  transition: width 0.15s, height 0.15s;
-}
-.cursor-ring {
-  position: fixed;
-  width: 38px; height: 38px;
-  border: 1.5px solid rgba(94,106,210,0.35);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-}
-@media (hover: none), (pointer: coarse) {
-  .cursor-dot, .cursor-ring { display: none; }
 }
 
 /* ═══════════════════════════════════════
@@ -480,4 +452,135 @@ body {
 @keyframes fade-in-up {
   from { opacity:0; transform: translateY(30px); }
   to   { opacity:1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE — ALL DEVICES
+   (no design changes, layout only)
+═══════════════════════════════════════ */
+
+/* Prevent horizontal overflow globally */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { overflow-x: hidden; }
+
+/* ── Shared container padding ── */
+/* All inline style="padding:'0 28px'" targets */
+@media (max-width: 600px) {
+  /* Force every maxWidth container to have safe padding on small screens */
+  [style*="padding: '0 28px'"],
+  [style*="padding:'0 28px'"] {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}
+
+/* ── Navbar ── */
+.navbar-links { display: flex; }
+.navbar-hamburger { display: none; }
+.navbar-mobile-menu { display: none; }
+
+@media (max-width: 767px) {
+  .navbar-links { display: none !important; }
+  .navbar-hamburger { display: flex !important; }
+  .navbar-mobile-menu.open { display: flex !important; }
+}
+
+/* ── Section vertical padding ── */
+@media (max-width: 767px) {
+  .section-padded {
+    padding-top: 72px !important;
+    padding-bottom: 72px !important;
+  }
+}
+
+/* ── Skills: 3-col → 1-col ── */
+.skills-categories-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.skills-bars-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 60px;
+}
+@media (max-width: 900px) {
+  .skills-categories-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 600px) {
+  .skills-categories-grid { grid-template-columns: 1fr !important; }
+  .skills-bars-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+}
+
+/* ── About: 3fr 2fr side-by-side → stack ── */
+.about-grid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 72px;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .about-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+}
+
+/* ── Footer: 3-col → 1-col ── */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 48px;
+}
+@media (max-width: 860px) {
+  .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 32px !important; }
+}
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
+}
+
+/* ── Contact: name+email 2-col → 1-col ── */
+.contact-name-email-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 600px) {
+  .contact-name-email-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── Hero ── */
+@media (max-width: 767px) {
+  /* Disable parallax on mobile — causes jank */
+  .hero-parallax {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  /* Tighten hero padding */
+  #hero { padding-top: 96px !important; padding-bottom: 48px !important; }
+}
+
+/* ── AI Assistant chat window ── */
+@media (max-width: 480px) {
+  /* Prevent chat window from going off screen */
+  .ai-chat-window {
+    width: calc(100vw - 16px) !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+}
+
+/* ── Particle canvas — off on mobile ── */
+@media (max-width: 767px) {
+  canvas { display: none !important; }
+}
+
+/* ── Plasma orbs — reduce on mobile ── */
+@media (max-width: 767px) {
+  .plasma-orb { opacity: 0.4 !important; }
+}
+
+/* ── Touch: disable expensive hover effects ── */
+@media (hover: none) {
+  .holo-card:hover { transform: none !important; box-shadow: none !important; }
+  .plasma-orb { animation: none !important; }
 }

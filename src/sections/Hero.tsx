@@ -59,7 +59,9 @@ export default function Hero() {
     if (!el) return;
 
     const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
-    if (reduceMotion) return;
+    const isMobile = window.matchMedia?.('(max-width: 767px)')?.matches;
+    // Disable parallax on mobile — causes scroll jank on low-end devices
+    if (reduceMotion || isMobile) return;
 
     const onScroll = () => {
       const y = window.scrollY;
@@ -93,7 +95,7 @@ export default function Hero() {
       }}
     >
 
-      <div className="hero-parallax" style={{ maxWidth:1200, margin:'0 auto', padding:'0 28px', width:'100%' }}>
+      <div className="hero-parallax" style={{ maxWidth:1200, margin:'0 auto', padding:'0 clamp(16px, 4vw, 28px)', width:'100%' }}>
 
         {/* Status badge */}
         <div

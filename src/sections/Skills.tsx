@@ -46,9 +46,9 @@ export default function Skills() {
       id="skills"
       ref={ref as any}
       className={`reveal ${vis ? 'visible' : ''}`}
-      style={{ padding:'130px 0', position:'relative', zIndex:2 }}
+      style={{ padding:'clamp(72px,10vw,130px) 0', position:'relative', zIndex:2 }}
     >
-      <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 28px' }}>
+      <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 clamp(16px, 4vw, 28px)' }}>
 
         <div className="section-label">
           <span className="label-text">// Skills</span>
@@ -64,7 +64,7 @@ export default function Skills() {
         </div>
 
         {/* Skill categories */}
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:14, marginBottom:14 }}>
+        <div className="skills-categories-grid" style={{ display:'grid', gap:14, marginBottom:14 }}>
           {CATS.map(cat => (
             <div key={cat.label} className="holo-card" style={{ padding:'26px' }}>
               <div style={{ marginBottom:22, paddingBottom:16, borderBottom:'1px solid rgba(255,255,255,0.04)' }}>
@@ -86,7 +86,7 @@ export default function Skills() {
         {/* Proficiency bars */}
         <div className="holo-card" style={{ padding:'30px' }}>
           <p style={{ fontFamily:'Space Mono,monospace', fontSize:9, color:'rgba(255,255,255,0.65)', letterSpacing:'0.25em', marginBottom:28 }}>[PROFICIENCY]</p>
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'16px 60px' }}>
+          <div className="skills-bars-grid" style={{ display:'grid', gap:'16px 60px' }}>
             {BARS.map(b => (
               <div key={b.name}>
                 <div style={{ display:'flex', justifyContent:'space-between', marginBottom:7 }}>

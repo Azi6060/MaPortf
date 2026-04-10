@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 const EnvSchema = z.object({
   GROQ_API_KEY: z.string().min(1),
-  PORT: z.coerce.number().int().positive().default(10000),
+  PORT: z.coerce.number().int().positive().default(8787),
   RAG_DATA_DIR: z.string().default('rag_data'),
   GROQ_MODEL: z.string().default('llama-3.1-8b-instant'),
 });

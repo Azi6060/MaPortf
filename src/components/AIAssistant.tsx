@@ -163,7 +163,7 @@ export default function AIAssistant() {
   }
 
   return (
-    <div style={{ position: 'fixed', right: 18, bottom: 18, zIndex: 999 }}>
+    <div style={{ position: 'fixed', right: 'clamp(8px,3vw,18px)', bottom: 'clamp(8px,3vw,18px)', zIndex: 999 }}>
       {!open ? (
         <button
           className="btn-primary"
@@ -176,8 +176,8 @@ export default function AIAssistant() {
         <div
           className="holo-card"
           style={{
-            width: isExpanded ? 'calc(100vw - 36px)' : 380,
-            height: isExpanded ? 'calc(100vh - 36px)' : 480,
+            width: isExpanded ? 'calc(100vw - 16px)' : 'min(380px, calc(100vw - 16px))',
+            height: isExpanded ? 'calc(100vh - 16px)' : 'min(480px, calc(100vh - 80px))',
             maxWidth: 'calc(100vw - 36px)',
             maxHeight: 'calc(100vh - 36px)',
             padding: 16,
