@@ -236,10 +236,8 @@ app.post('/api/rag/chat', async (req, res) => {
   }
 });
 
-// ─── Catch-all: Fixed for Express 5 ──────────────────────────────────────────
-// The '*' wildcard is no longer supported directly in Express 5.
-// Using '(.*)' satisfies the new requirement for named/captured parameters.
-app.get('(.*)', (_req, res) => {
+// ─── Catch-all: serve index.html for client-side routing ─────────────────────
+app.get('*', (_req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
