@@ -13,7 +13,13 @@ import { buildEmbeddingRetriever } from './rag/retriever.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const env = loadEnv();
+let env: ReturnType<typeof loadEnv>;
+try {
+  env = loadEnv();
+} catch (err) {
+  console.error('[startup] Environment variable error:', err);
+  process.exit(1);
+}
 
 const app = express();
 app.use(express.json({ limit: '1mb' }));
@@ -237,7 +243,8 @@ app.post('/api/rag/chat', async (req, res) => {
 });
 
 // ─── Catch-all: serve index.html for client-side routing ─────────────────────
-app.get('*', (_req, res) => {
+// Express 5 + path-to-regexp v8 requires '{*path}' syntax
+app.get('/{*path}', (_req, res) => {
   res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
