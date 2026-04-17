@@ -8,8 +8,9 @@
     "dev:server": "tsx server/index.ts",
     "dev:all": "tsx server/index.ts",
     "build": "tsc && vite build",
-    "preview": "vite preview",
-    "start": "tsx server/index.ts"
+    "preview": "npm run build && wrangler dev",
+    "start": "tsx server/index.ts",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "@xenova/transformers": "^2.17.2",
@@ -23,6 +24,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.32.3",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^22.19.17",
@@ -34,6 +36,7 @@
     "tailwindcss": "^3.4.17",
     "tsx": "^4.21.0",
     "typescript": "latest",
-    "vite": "latest"
+    "vite": "latest",
+    "wrangler": "^4.83.0"
   }
 }
