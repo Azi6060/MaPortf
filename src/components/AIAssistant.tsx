@@ -1,4 +1,4 @@
-import { X, Send, Maximize2, Minimize2 } from 'lucide-react';
+import { X, Send } from 'lucide-react';
 import React, { useMemo, useRef, useEffect, useState, Fragment } from 'react';
 
 type ChatMsg = { role: 'user' | 'assistant'; content: string };
@@ -94,7 +94,7 @@ function renderInline(text: string): React.ReactNode {
 
 export default function AIAssistant() {
   const [open, setOpen] = useState(false);
-  const [expanded, setExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<ChatMsg[]>([
@@ -154,10 +154,17 @@ export default function AIAssistant() {
         <div
           className="holo-card"
           style={{
-            width: expanded ? 'min(680px, calc(100vw - 36px))' : 380,
+            width: isExpanded ? 'calc(100vw - 36px)' : 380,
+            height: isExpanded ? 'calc(100vh - 36px)' : 480,
             maxWidth: 'calc(100vw - 36px)',
+            maxHeight: 'calc(100vh - 36px)',
             padding: 16,
-            transition: 'width 0.3s cubic-bezier(0.16,1,0.3,1)',
+            display: 'flex',
+            flexDirection: 'column',
+            resize: isExpanded ? 'none' : 'both',
+            overflow: 'hidden',
+            minWidth: 300,
+            minHeight: 300,
           }}
         >
           {/* Header */}
@@ -166,33 +173,65 @@ export default function AIAssistant() {
               <div style={{ fontWeight: 650, letterSpacing: '-0.01em', color: 'var(--foreground)', fontSize: 15 }}>MiniMe</div>
               <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.50)', marginTop: 2 }}>Ask me about Aziz's projects &amp; skills</div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
-              {/* Expand / Minimize toggle */}
+            <div style={{ display: 'flex', gap: 8 }}>
               <button
-                onClick={() => setExpanded((v) => !v)}
-                aria-label={expanded ? 'Minimize chat' : 'Expand chat'}
-                title={expanded ? 'Minimize' : 'Expand'}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.65)', cursor: 'pointer', transition: 'background 0.15s, color 0.15s' }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.10)'; (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.95)'; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.05)'; (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.65)'; }}
+                onClick={() => setIsExpanded(!isExpanded)}
+                aria-label="Toggle expand"
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  width: 32, height: 32, borderRadius: 8,
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  background: 'rgba(255,255,255,0.05)',
+                  color: 'rgba(255,255,255,0.65)',
+                  cursor: 'pointer', flexShrink: 0,
+                  transition: 'background 0.15s, color 0.15s',
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.10)';
+                  (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.95)';
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.05)';
+                  (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.65)';
+                }}
               >
-                {expanded ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+                {isExpanded ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
               </button>
-              {/* Close */}
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Close assistant"
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: 8, border: '1px solid rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.65)', cursor: 'pointer', transition: 'background 0.15s, color 0.15s' }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.10)'; (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.95)'; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.05)'; (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.65)'; }}
-              >
-                <X size={14} />
-              </button>
+                style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                width: 32, height: 32, borderRadius: 8,
+                border: '1px solid rgba(255,255,255,0.12)',
+                background: 'rgba(255,255,255,0.05)',
+                color: 'rgba(255,255,255,0.65)',
+                cursor: 'pointer', flexShrink: 0,
+                transition: 'background 0.15s, color 0.15s',
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.10)';
+                (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.95)';
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.05)';
+                (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.65)';
+              }}
+            >
+              <X size={14} />
+            </button>
             </div>
           </div>
 
           {/* Messages */}
-          <div style={{ height: expanded ? 480 : 320, overflowY: 'auto', padding: '10px 12px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.03)', transition: 'height 0.3s cubic-bezier(0.16,1,0.3,1)' }}>
+          <div
+            style={{
+              flex: 1, overflowY: 'auto', minHeight: 0,
+              padding: '10px 12px', borderRadius: 12,
+              border: '1px solid rgba(255,255,255,0.08)',
+              background: 'rgba(255,255,255,0.03)',
+            }}
+          >
             {displayed.map((m, i) => (
               <div key={i} style={{ marginBottom: 14 }}>
                 <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase', color: m.role === 'user' ? 'var(--accent)' : 'rgba(255,255,255,0.38)', marginBottom: 5 }}>
