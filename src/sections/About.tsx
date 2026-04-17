@@ -26,16 +26,16 @@ export default function About() {
       id="about"
       ref={ref as any}
       className={`reveal ${vis ? 'visible' : ''}`}
-      style={{ padding:'130px 0', position:'relative', zIndex:2 }}
+      style={{ padding:'clamp(72px,10vw,130px) 0', position:'relative', zIndex:2 }}
     >
-      <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 28px' }}>
+      <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 clamp(16px, 4vw, 28px)' }}>
 
         {/* Label */}
         <div className="section-label">
           <span className="label-text">// About</span>
         </div>
 
-        <div style={{ display:'grid', gridTemplateColumns:'3fr 2fr', gap:72, alignItems:'start' }}>
+        <div className="about-grid" style={{ display:'grid', alignItems:'start' }}>
 
           {/* Left – prose */}
           <div>

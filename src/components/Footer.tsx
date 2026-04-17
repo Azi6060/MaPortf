@@ -20,8 +20,8 @@ export default function Footer() {
         background:'linear-gradient(to right,transparent,rgba(255,255,255,0.12),rgba(94,106,210,0.30),rgba(255,255,255,0.12),transparent)',
       }} />
 
-      <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 28px' }}>
-        <div style={{ display:'grid', gridTemplateColumns:'1.4fr 1fr 1fr', gap:48, marginBottom:52 }}>
+      <div style={{ maxWidth:1200, margin:'0 auto', padding:'0 clamp(16px, 4vw, 28px)' }}>
+        <div className="footer-grid" style={{ display:'grid', gap:48, marginBottom:52 }}>
 
           {/* Brand */}
           <div>

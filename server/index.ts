@@ -3,16 +3,24 @@ import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
 import Groq from 'groq-sdk';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 import { loadEnv } from './env.js';
 import { loadRagChunks } from './rag/loadDocs.js';
 import { buildEmbeddingRetriever } from './rag/retriever.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const env = loadEnv();
 
 const app = express();
 app.use(express.json({ limit: '1mb' }));
 app.use(cors({ origin: true }));
+
+// ─── Serve Vite build (fixes "Cannot GET /") ─────────────────────────────────
+app.use(express.static(path.join(__dirname, '../dist')));
 
 type ChatMessage = { role: 'user' | 'assistant'; content: string };
 
@@ -57,7 +65,6 @@ type Intent =
 function classifyIntent(text: string, messages: ChatMessage[]): Intent {
   const t = text.trim().toLowerCase();
 
-  // Greeting — standalone, first message only
   const isFirstUserMessage = messages.filter((m) => m.role === 'user').length <= 1;
   if (
     isFirstUserMessage &&
@@ -66,26 +73,22 @@ function classifyIntent(text: string, messages: ChatMessage[]): Intent {
     return 'greeting';
   }
 
-  // MiniMe identity
   if (
     /\b(who are you|what are you|are you (a bot|an ai|a model|gpt|chatgpt|human)|what kind of (ai|model|assistant)|how were you (built|made|trained)|tell me about yourself)\b/.test(t)
   ) {
     return 'minime_identity';
   }
 
-  // MiniMe features
   if (
     /\b(what can you (do|help|tell)|your features?|what('s| is) your (purpose|role|function)|how do you work|what do you know|what are your capabilities|what are you (good at|capable of))\b/.test(t)
   ) {
     return 'minime_features';
   }
 
-  // Impersonation
   if (/^(i am aziz|i'm aziz|this is aziz|im aziz)$/.test(t)) {
     return 'impersonation';
   }
 
-  // Off-topic
   if (
     /\b(weather|recipe|cook|sport|football|soccer|movie|film|celebrity|news|stock market|crypto|bitcoin|politics|war|covid|vaccine|joke|rap|song|lyric|write me a poem)\b/.test(t) &&
     !/aziz|portfolio|project|skill|internship/.test(t)
@@ -93,14 +96,12 @@ function classifyIntent(text: string, messages: ChatMessage[]): Intent {
     return 'off_topic';
   }
 
-  // Deep dive
   if (
     /\b(everything|full overview|in depth|in detail|tell me (what you can|all about)|deep dive|thorough|comprehensive|complete overview|walk me through|all (his|your) (skills?|projects?|info|details?))\b/.test(t)
   ) {
     return 'deep_dive';
   }
 
-  // General about Aziz
   if (
     /\b(who is (he|aziz)|tell me about (him|aziz)|what does he do|introduce (him|aziz)|background|give me an overview)\b/.test(t)
   ) {
@@ -163,36 +164,34 @@ const RESPONSES = {
     "That's outside my lane — I'm purpose-built for Aziz's portfolio. Ask me about his projects, skills, or background and I'm all yours.",
 };
 
-// ─── Groq + RAG setup ─────────────────────────────────────────────────────────
+// ─── RAG retriever (initialized after server starts) ─────────────────────────
 
+let retriever: Awaited<ReturnType<typeof buildEmbeddingRetriever>> | null = null;
 const groq = new Groq({ apiKey: env.GROQ_API_KEY });
-
-const chunks = await loadRagChunks({ dataDir: env.RAG_DATA_DIR });
-const retriever = await buildEmbeddingRetriever(chunks);
-
-console.log(`[rag] loaded chunks=${retriever.chunkCount} from ${env.RAG_DATA_DIR}`);
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 
 app.get('/api/rag/health', (_req, res) => {
-  res.json({ ok: true, chunks: retriever.chunkCount, model: env.GROQ_MODEL });
+  res.json({ ok: true, chunks: retriever?.chunkCount ?? 0, model: env.GROQ_MODEL });
 });
 
 app.post('/api/rag/chat', async (req, res) => {
+  if (!retriever) {
+    return res.status(503).json({ error: 'still_loading', message: 'MiniMe is warming up, please try again in a moment.' });
+  }
+
   try {
     const messages = (req.body?.messages ?? []) as ChatMessage[];
     const lastUser = [...messages].reverse().find((m) => m.role === 'user')?.content ?? '';
 
     const intent = classifyIntent(lastUser, messages);
 
-    // ── Hardcoded short-circuits ──
-    if (intent === 'greeting')        return res.json({ answer: RESPONSES.greeting,        sources: [] });
+    if (intent === 'greeting')         return res.json({ answer: RESPONSES.greeting,         sources: [] });
     if (intent === 'minime_identity') return res.json({ answer: RESPONSES.minime_identity, sources: [] });
     if (intent === 'minime_features') return res.json({ answer: RESPONSES.minime_features, sources: [] });
     if (intent === 'impersonation')   return res.json({ answer: RESPONSES.impersonation,   sources: [] });
     if (intent === 'off_topic')       return res.json({ answer: RESPONSES.off_topic,       sources: [] });
 
-    // ── RAG + LLM path ──
     const isDeep = intent === 'deep_dive';
     const retrievalQuery = buildRetrievalQuery(messages);
     const hits = await retriever.search(retrievalQuery, isDeep ? 14 : 8);
@@ -237,6 +236,25 @@ app.post('/api/rag/chat', async (req, res) => {
   }
 });
 
+// ─── Catch-all: Fixed for Express 5 ──────────────────────────────────────────
+// The '*' wildcard is no longer supported directly in Express 5.
+// Using '(.*)' satisfies the new requirement for named/captured parameters.
+app.get('(.*)', (_req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
+
+// ─── Start server FIRST, then load RAG in background ─────────────────────────
 app.listen(env.PORT, () => {
   console.log(`[server] listening on http://localhost:${env.PORT}`);
+
+  // Load RAG after port is open so Render doesn't time out
+  loadRagChunks({ dataDir: env.RAG_DATA_DIR })
+    .then((chunks) => buildEmbeddingRetriever(chunks))
+    .then((r) => {
+      retriever = r;
+      console.log(`[rag] loaded chunks=${r.chunkCount} from ${env.RAG_DATA_DIR}`);
+    })
+    .catch((err) => {
+      console.error('[rag] failed to load:', err);
+    });
 });
